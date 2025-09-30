@@ -54,11 +54,13 @@ if __name__ == "__main__":
     )
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
+    schedular = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=num_epochs)
     
     results = train(model=model,
                     train_dataloader=train_loader,
                     test_dataloader=test_loader,
                     optimizer=optimizer,
+                    scheduler=schedular,
                     loss_fn=criterion,
                     epochs=num_epochs,
                     save_dir=working_dir,

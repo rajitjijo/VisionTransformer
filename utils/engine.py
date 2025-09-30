@@ -121,6 +121,7 @@ def train(model: torch.nn.Module,
           train_dataloader: torch.utils.data.DataLoader, 
           test_dataloader: torch.utils.data.DataLoader, 
           optimizer: torch.optim.Optimizer,
+          scheduler,
           loss_fn: torch.nn.Module,
           epochs: int,
           writer: SummaryWriter,
@@ -168,13 +169,15 @@ def train(model: torch.nn.Module,
     model.to(device)
 
     # Loop through training and testing steps for a number of epochs
-    for epoch in tqdm(range(epochs)):
+    for epoch in tqdm(range(epochs), colour="green"):
         train_loss, train_acc = train_step(model=model,
                                           dataloader=train_dataloader,
                                           loss_fn=loss_fn,
                                           optimizer=optimizer,
                                           device=device)
         
+        scheduler.step()
+
         test_loss, test_acc = test_step(model=model,
           dataloader=test_dataloader,
           loss_fn=loss_fn,
