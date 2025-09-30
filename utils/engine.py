@@ -5,6 +5,7 @@ import torch
 from torch.utils.tensorboard import SummaryWriter
 from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
+import os
 
 def train_step(model: torch.nn.Module, 
                dataloader: torch.utils.data.DataLoader, 
@@ -123,6 +124,7 @@ def train(model: torch.nn.Module,
           loss_fn: torch.nn.Module,
           epochs: int,
           writer: SummaryWriter,
+          save_dir:str,
           device: torch.device) -> Dict[str, List]:
     """Trains and tests a PyTorch model.
 
@@ -172,10 +174,16 @@ def train(model: torch.nn.Module,
                                           loss_fn=loss_fn,
                                           optimizer=optimizer,
                                           device=device)
+        
         test_loss, test_acc = test_step(model=model,
           dataloader=test_dataloader,
           loss_fn=loss_fn,
           device=device)
+        
+        cur_save_dir = os.path.join(save_dir, f"train{epoch+1}")
+        os.makedirs(cur_save_dir, exist_ok=True)
+        checkpoint_name = os.path.join(cur_save_dir, f"train{epoch+1}.pth")
+        torch.save(model.state_dict(), checkpoint_name)
 
         # Print out what's happening
         tqdm.write(
@@ -212,7 +220,7 @@ def train(model: torch.nn.Module,
             if epoch == 0:
                 writer.add_graph(model, input_to_model=torch.randn(32,3,224,225).to(device))
 
-    writer.close()
+            writer.close()
 
     # Return the filled results at the end of the epochs
     return results

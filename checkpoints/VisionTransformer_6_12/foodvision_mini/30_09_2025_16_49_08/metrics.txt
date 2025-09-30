@@ -1,0 +1,10 @@
+Epoch: 1 | train_loss: 1.5087 | train_acc: 0.3319 | test_loss: 1.0628 | test_acc: 0.3712
+Epoch: 2 | train_loss: 1.1153 | train_acc: 0.3621 | test_loss: 1.1654 | test_acc: 0.2604
+Epoch: 3 | train_loss: 1.0381 | train_acc: 0.4550 | test_loss: 1.1462 | test_acc: 0.3542
+Epoch: 4 | train_loss: 0.9078 | train_acc: 0.5715 | test_loss: 0.8838 | test_acc: 0.5758
+Epoch: 5 | train_loss: 0.8713 | train_acc: 0.5898 | test_loss: 1.0131 | test_acc: 0.4858
+Epoch: 6 | train_loss: 0.8300 | train_acc: 0.6222 | test_loss: 0.8119 | test_acc: 0.6686
+Epoch: 7 | train_loss: 0.8295 | train_acc: 0.6203 | test_loss: 0.7572 | test_acc: 0.6989
+Epoch: 8 | train_loss: 0.7518 | train_acc: 0.6777 | test_loss: 0.7827 | test_acc: 0.7405
+Epoch: 9 | train_loss: 0.7197 | train_acc: 0.6899 | test_loss: 0.8165 | test_acc: 0.5066
+Epoch: 10 | train_loss: 0.6860 | train_acc: 0.6914 | test_loss: 0.8495 | test_acc: 0.6193

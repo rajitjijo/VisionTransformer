@@ -165,7 +165,7 @@ def print_train_time(start, end, device=None):
 
 
 # Plot loss curves of a model
-def plot_loss_curves(results):
+def plot_loss_curves(results, save_path):
     """Plots training curves of a results dictionary.
 
     Args:
@@ -200,6 +200,8 @@ def plot_loss_curves(results):
     plt.title("Accuracy")
     plt.xlabel("Epochs")
     plt.legend()
+
+    plt.savefig(save_path+"/metrics.png")
 
 
 # Pred and plot image function from notebook 04
