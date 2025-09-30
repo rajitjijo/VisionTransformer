@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torchinfo import summary
 
 class PatchEmbedding(nn.Module):
 
@@ -33,11 +34,12 @@ class PatchEmbedding(nn.Module):
         x = x + self.position_token
 
         return x
-    
 
+#NOTE: Need to remove the embedding from the forward pass of the attention encoder
 class AttentionEncoder(nn.Module):
 
-    def __init__(self, num_heads:int=1, embedding_dim:int=768, in_channels:int=3, patch_size:int=16, image_size:int=224, dropout:float = 0.0, dense_dim:int=3072):
+    def __init__(self, num_heads:int=1, embedding_dim:int=768, in_channels:int=3, patch_size:int=16, 
+                 image_size:int=224, dropout:float = 0.0, dense_dim:int=3072):
 
         super().__init__()
         self.num_heads = num_heads
@@ -79,6 +81,61 @@ class AttentionEncoder(nn.Module):
 
         return attended_x + attended_x_norm
 
+class VisionTransformer(nn.Module):
+
+    def __init__(self,
+                 img_size:int=224,
+                 in_channels:int=3,
+                 patch_size:int=16,
+                 num_layers:int=12,
+                 embedding_dim:int=768,
+                 mlp_size:int=3072,
+                 num_heads:int=12,
+                 attn_dropout:float=0.0,
+                 mlp_dropout:float=0.1,
+                 embedding_dropout:float=0.1,
+                 num_classes:int=1000
+                 ):
+        
+        super().__init__()
+        self.image_size = img_size
+        self.in_channels = in_channels
+        self.patch_size = patch_size
+        self.num_layers = num_layers
+        self.embedding_dim = embedding_dim
+        self.mlp_size = mlp_size
+        self.num_heads = num_heads
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == "__main__":
 
@@ -88,8 +145,8 @@ if __name__ == "__main__":
 
     # print(f"Shape of embedded images {embed(random_img).shape}")
     
-    # # for name, param in embed.named_parameters():
-    # #     print(name, param.shape, param.requires_grad)
+    # for name, param in embed.named_parameters():
+    #     print(name, param.shape, param.requires_grad)
 
     # total = sum(p.numel() for p in embed.parameters() if p.requires_grad)
     # print(f"Total trainable params: {total}")
@@ -98,5 +155,15 @@ if __name__ == "__main__":
 
     # print(encoder(random_img).shape)
 
-    for name, param in encoder.named_parameters():
-        print(name, param.shape, param.requires_grad)
+    # for name, param in encoder.named_parameters():
+    #     print(name, param.shape, param.requires_grad)
+
+    desc = summary(
+        model=encoder,
+        input_size=(200,3,224,224),
+        col_names=["input_size", "output_size", "num_params", "trainable"],
+        col_width=20,
+        row_settings=["var_names"]
+    )
+
+    # print(str(desc))
