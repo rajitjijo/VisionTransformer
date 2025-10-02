@@ -1,2 +1,4 @@
 data/
 *pth
+notebooks/.gradio
+notebooks/.ipynb_checkpoints
