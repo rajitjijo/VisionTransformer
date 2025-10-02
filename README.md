@@ -46,4 +46,4 @@ This is the 16x16 patched image that passes onto the multiheaded attention layer
 
 ## 🔹 Metrics & Results
 ### 📉 Training & Validation Loss  
-![](asset/train_val_loss.png) 
+![](checkpoints/VisionTransformer_B16_Pretrained/foodvision_mini/02_10_2025_12_25_10/metrics.png) 

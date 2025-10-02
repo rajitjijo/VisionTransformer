@@ -1,4 +1,5 @@
 import torchvision.transforms as transforms
+from torchvision import models
 from utils.data_builder import create_dataloaders
 from VIT import VisionTransformer
 from datetime import datetime
@@ -11,12 +12,13 @@ from utils.util import plot_loss_curves
 #HYPERPARAMETERS
 img_size = 224
 batch_size = 32
-num_epochs = 2
+num_epochs = 50
 num_heads = 6
 num_layers = 12
 img_transforms = transforms.Compose([transforms.Resize((img_size,img_size)), transforms.ToTensor()])
 train_dir, test_dir = "data/train", "data/test"
-model_name = f"VisionTransformer_{num_layers}_{num_heads}"
+# model_name = f"VisionTransformer_{num_layers}_{num_heads}"
+model_name = "VisionTransformer_B16_Pretrained"
 experiment_name = "foodvision_mini"
 train_save_dir = "checkpoints"
 learning_rate = 1e-4
@@ -26,9 +28,11 @@ weight_decay = 0.05
 
 if __name__ == "__main__":
 
+    weights = models.ViT_B_16_Weights.DEFAULT
+
     train_loader, test_loader, class_names = create_dataloaders(train_dir=train_dir,
                                                                 test_dir=test_dir,
-                                                                transform=img_transforms,
+                                                                transform=weights.transforms(),
                                                                 batch_size=batch_size)
     
     timestamp = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
@@ -39,19 +43,30 @@ if __name__ == "__main__":
 
     num_classes = len(class_names)
 
-    model = VisionTransformer(
-        img_size=img_size,
-        in_channels=3,
-        patch_size=16,
-        num_layers=num_layers,
-        embedding_dim=768,
-        mlp_size=3072,
-        num_heads=num_heads,
-        attn_dropout=0.0,
-        mlp_dropout=0.1,
-        embedding_dropout=0.1,
-        num_classes=num_classes
-    )
+    #Custom Created Vision Transformer
+    # model = VisionTransformer(
+    #     img_size=img_size,
+    #     in_channels=3,
+    #     patch_size=16,
+    #     num_layers=num_layers,
+    #     embedding_dim=768,
+    #     mlp_size=3072,
+    #     num_heads=num_heads,
+    #     attn_dropout=0.0,
+    #     mlp_dropout=0.1,
+    #     embedding_dropout=0.1,
+    #     num_classes=num_classes
+    # )
+
+    #Pretrained Vision Transformer for faster learning
+    model = models.vit_b_16(weights=weights)
+    model.heads.head = nn.Linear(in_features=model.heads.head.in_features, out_features=3) #type:ignore
+    for param in model.conv_proj.parameters():
+        param.requires_grad = False
+    for param in model.encoder.parameters():
+        param.requires_grad = False
+
+
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     schedular = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer=optimizer, T_max=num_epochs)
